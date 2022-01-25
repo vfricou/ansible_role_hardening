@@ -1,0 +1,3 @@
+---
+- name: 'import preconfigure tasks'
+  ansible.builtin.import_tasks: 'preconfigure.yml'

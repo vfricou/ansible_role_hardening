@@ -2,3 +2,6 @@
 
 - name: "import validator"
   ansible.builtin.import_tasks: 'validator/main.yml'
+
+- name: 'import openssh'
+  ansible.builtin.import_tasks: 'openssh/main.yml'
