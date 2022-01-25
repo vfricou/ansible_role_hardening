@@ -1,4 +1,5 @@
 ---
+openssh_config: true
 sshd_listen_port: 22
 sshd_listen_address:
   - '0.0.0.0'
@@ -53,4 +54,4 @@ sshd_permit_user_environment: 'no'
 sshd_use_dns: 'no'
 sshd_permit_tunnel: 'no'
 sshd_enable_sftp: true
-#sshd_banner_path: /etc/ssh/banner
+# sshd_banner_path: /etc/ssh/banner
