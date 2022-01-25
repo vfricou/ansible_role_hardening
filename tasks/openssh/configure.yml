@@ -7,3 +7,13 @@
     group: 'root'
     mode: '0644'
   notify: 'restart ssh daemon'
+
+- name: 'openssh | configure | deploy banner'
+  ansible.builtin.template:
+    dest: '{{ sshd_banner_path }}'
+    src: 'banner.j2'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+  when: sshd_banner_path is defined
+
