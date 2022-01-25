@@ -1,0 +1,8 @@
+---
+- name: 'openssh | configure | deploy sshd configuration'
+  ansible.builtin.template:
+    dest: '{{ sshd_config_path }}'
+    src: 'openssh/sshd_config.j2'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
