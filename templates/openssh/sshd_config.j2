@@ -1,0 +1,81 @@
+#########################################
+#     Ansible managed configuration     #
+#########################################
+
+Port {{ sshd_listen_port }}
+AddressFamily {{ sshd_address_familly }}
+{% for item in sshd_listen_address %}
+ListenAddress {{ item }}
+{% endfor %}
+Protocol 2
+
+HostKey /etc/ssh/ssh_host_rsa_key
+HostKey /etc/ssh/ssh_host_ed25519_key
+RekeyLimit 512M 6h
+
+Ciphers {{ sshd_ciphers|join(',') }}
+MACs {{ sshd_macs|join(',') }}
+KexAlgorithms {{ sshd_kexalgorithm|join(',') }}
+Compression {{ sshd_compression }}
+
+SyslogFacility {{ sshd_syslogfacility }}
+LogLevel {{ sshd_loglevel }}
+
+LoginGraceTime {{ sshd_logingracetime }}
+PermitRootLogin {{ sshd_permitrootlogin }}
+StrictModes yes
+MaxAuthTries {{ sshd_auth_maxtries }}
+MaxSessions {{ sshd_sessions }}
+
+PubkeyAuthentication {{ sshd_auth_pubkey }}
+HostbasedAuthentication {{ sshd_auth_hostbased }}
+PasswordAuthentication {{ sshd_auth_password }}
+PermitEmptyPasswords {{ sshd_auth_emptypassword }}
+ChallengeResponseAuthentication {{ sshd_auth_challengeresponse }}
+{% if sshd_kerberos_enabled %}
+
+KerberosAuthentication yes
+KerberosOrLocalPasswd {{ sshd_krb5_or_local_password }}
+KerberosTicketCleanup {{ sshd_krb5_ticket_cleanup }}
+KerberosGetAFSToken {{ sshd_krb5_get_afs_token }}
+{% endif %}
+{% if sshd_gssapi_enabled %}
+
+GSSAPIAuthentication yes
+GSSAPICleanupCredentials {{ sshd_gssapi_cleanup }}
+GSSAPIStrictAcceptorCheck {{ sshd_gssapi_strict_acceptor_check }}
+GSSAPIKeyExchange {{ sshd_gssapi_key_exchange }}
+{% endif %}
+
+UsePAM {{ sshd_use_pam }}
+
+AllowAgentForwarding {{ sshd_allow_agent_forwarding }}
+AllowTcpForwarding {{ sshd_allow_tcp_forwarding }}
+{% if sshd_x11_forwarding == 'yes' %}
+X11Forwarding yes
+X11DisplayOffset {{ sshd_x11_display_offset }}
+X11UseLocalhost {{ sshd_x11_use_localhost }}
+{% else %}
+X11Forwarding no
+{% endif %}
+PermitTTY {{ sshd_permit_tty }}
+PrintMotd {{ sshd_permit_motd }}
+PrintLastLog {{ sshd_print_lastlog }}
+TCPKeepAlive {{ sshd_tcp_keepalive }}
+PermitUserEnvironment {{ sshd_permit_user_environment }}
+UseDNS {{ sshd_use_dns }}
+PermitTunnel {{ sshd_permit_tunnel }}
+{% if sshd_banner_path is defined %}
+
+Banner {{ sshd_banner_path }}
+{% endif %}
+
+AcceptEnv LANG LC_*
+
+{% if sshd_enable_sftp %}
+{% if ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu' %}
+Subsystem sftp /usr/lib/openssh/sftp-server
+{% elif ansible_distribution == 'CentOS' or ansible_distribution == 'RedHat' or ansible_distribution == 'Rocky'%}
+Subsystem sftp /usr/libexec/openssh/sftp-server
+{% endif %}
+{% endif %}
