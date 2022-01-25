@@ -1,0 +1,4 @@
+---
+
+- name: "import validator"
+  ansible.builtin.import_tasks: 'validator/main.yml'
