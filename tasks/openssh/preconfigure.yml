@@ -11,21 +11,15 @@
     - '/etc/ssh/ssh_host_rsa_key'
     - '/etc/ssh/ssh_host_rsa_key.pub'
 
-- name: 'openssh | preconfigure | generate new rsa host keys'
+- name: 'openssh | preconfigure | generate new host keys'
   community.crypto.openssh_keypair:
-    path: '/etc/ssh/ssh_host_rsa_key'
-    type: 'rsa'
-    size: 4096
-    comment: "SSH rsa host key for {{ ansible_hostname }}"
+    path: '{{ item.path }}'
+    type: '{{ item.type }}'
+    size: '{{ item.size }}'
+    comment: "SSH {{ item.type }} key for {{ ansible_hostname }}"
     owner: 'root'
     group: 'root'
     mode: '0600'
-
-- name: 'openssh | preconfigure | generate new ed25519 host keys'
-  community.crypto.openssh_keypair:
-    path: '/etc/ssh/ssh_host_ed25519_key'
-    type: 'ed25519'
-    comment: "SSH ed25519 host key for {{ ansible_hostname }}"
-    owner: 'root'
-    group: 'root'
-    mode: '0600'
+  loop:
+    - { path: '/etc/ssh/ssh_host_rsa_key', type: 'rsa', size: 4096 }
+    - { path: '/etc/ssh/ssh_host_ed25519_key', type: 'ed25519', size: 256 }
