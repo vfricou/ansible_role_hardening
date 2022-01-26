@@ -1,0 +1,13 @@
+---
+- name: "test_links | retrieve log folders {{ link.path }} informations"
+  ansible.builtin.stat:
+    path: "{{ link.path }}"
+  register: checked_link
+
+- name: "test_links | check existances and permissions for {{ link.path }}"
+  ansible.builtin.assert:
+    that:
+      - checked_link.stat.exists
+      - checked_link.stat.islnk
+      - checked_link.stat.pw_name == "{{ link.owner }}"
+      - checked_link.stat.gr_name == "{{ link.group }}"

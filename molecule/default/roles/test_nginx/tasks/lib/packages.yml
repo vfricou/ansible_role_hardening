@@ -1,0 +1,4 @@
+---
+- name: "test_packages | test if specified packages are installed"
+  ansible.builtin.assert:
+    that: "{{ package_assertion }}"
