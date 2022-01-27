@@ -79,3 +79,44 @@ Subsystem sftp /usr/lib/openssh/sftp-server
 Subsystem sftp /usr/libexec/openssh/sftp-server
 {% endif %}
 {% endif %}
+
+{% if matchs is defined %}
+{% for entry in matchs %}
+{% if entry|lower == 'user' %}
+Match User {{ matchs[entry]['catch'] }}
+    {% for opts in matchs[entry]['options'] %}
+    {{ opts }}
+    {% endfor %}
+{% elif entry|lower == 'group' %}
+Match Group {{ matchs[entry]['catch'] }}
+    {% for opts in matchs[entry]['options'] %}
+    {{ opts }}
+    {% endfor %}
+{% elif entry|lower == 'host' %}
+Match Host {{ matchs[entry]['catch'] }}
+    {% for opts in matchs[entry]['options'] %}
+    {{ opts }}
+    {% endfor %}
+{% elif entry|lower == 'localaddress' %}
+Match LocalAddress {{ matchs[entry]['catch'] }}
+    {% for opts in matchs[entry]['options'] %}
+    {{ opts }}
+    {% endfor %}
+{% elif entry|lower == 'localport' %}
+Match LocalPort {{ matchs[entry]['catch'] }}
+    {% for opts in matchs[entry]['options'] %}
+    {{ opts }}
+    {% endfor %}
+{% elif entry|lower == 'rdomain' %}
+Match RDomain {{ matchs[entry]['catch'] }}
+    {% for opts in matchs[entry]['options'] %}
+    {{ opts }}
+    {% endfor %}
+{% elif entry|lower == 'address' %}
+Match Address {{ matchs[entry]['catch'] }}
+    {% for opts in matchs[entry]['options'] %}
+    {{ opts }}
+    {% endfor %}
+{% endif %}
+{% endfor %}
+{% endif %}
