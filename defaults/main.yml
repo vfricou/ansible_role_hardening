@@ -1,12 +1,22 @@
 ---
+#########################################
+# Global role parts activation variables
 openssh_config: true
+
+#########################################
+# OpenSSH tuning variables
+# @var sshd_listen_port: 22 # Define ssh daemon listen port
 sshd_listen_port: 22
+# @var sshd_listen_address: # Define ssh daemon listen address (array format)
 sshd_listen_address:
   - '0.0.0.0'
+# @var sshd_address_familly: 'any' # Define ssh daemon listen address familly
 sshd_address_familly: 'any'
+# @var sshd_ciphers: # Define ssh daemon allowed ciphers list (array format)
 sshd_ciphers:
   - 'chacha20-poly1305@openssh.com'
   - 'aes256-gcm@openssh.com,aes256-ctr'
+# @var sshd_macs: # Define ssh daemon allowed macs list (array format)
 sshd_macs:
   - 'hmac-sha2-512-etm@openssh.com'
   - 'hmac-sha2-256-etm@openssh.com'
@@ -14,44 +24,81 @@ sshd_macs:
   - 'hmac-sha2-512'
   - 'hmac-sha2-256'
   - 'umac-128@openssh.com'
+# @var sshd_kexalgorithm: # Define ssh daemon allowed kexalgorithm list (array format)
 sshd_kexalgorithm:
   - 'curve25519-sha256@libssh.org'
   - 'ecdh-sha2-nistp521'
   - 'ecdh-sha2-nistp384'
   - 'ecdh-sha2-nistp256'
   - 'diffie-hellman-group-exchange-sha256'
+# @var sshd_compression: 'yes' # Define ssh daemon compression activation
 sshd_compression: 'yes'
+# @var sshd_syslogfacility: 'AUTH' # Define ssh daemon syslog facility
 sshd_syslogfacility: 'AUTH'
+# @var sshd_loglevel: 'INFO' # Define ssh daemon log level
 sshd_loglevel: 'INFO'
+# @var sshd_logingracetime: '120' # Define ssh daemon login grace time
 sshd_logingracetime: '120'
+# @var sshd_permitrootlogin: 'prohibit-password' # Define ssh daemon root password auth method
 sshd_permitrootlogin: 'prohibit-password'
+# @var sshd_auth_maxtries: '3' # Define ssh daemon max auth tries
 sshd_auth_maxtries: '3'
+# @var sshd_sessions: '1' # Define ssh daemon max parallel sessions for one user
 sshd_sessions: '1'
+# @var sshd_auth_pubkey: 'yes' # Define ssh daemon auth allow ssh keys
 sshd_auth_pubkey: 'yes'
+# @var sshd_auth_hostbased: 'no' # Define ssh daemon auth on host identification
 sshd_auth_hostbased: 'no'
+# @var sshd_auth_password: 'no' # Define ssh daemon auth allow password
 sshd_auth_password: 'no'
+# @var sshd_auth_emptypassword: 'no' # Define ssh daemon auth allow empty password
 sshd_auth_emptypassword: 'no'
+# @var sshd_auth_challengeresponse: 'no' # Define ssh daemon auth allow challenge response
 sshd_auth_challengeresponse: 'no'
+# @var sshd_kerberos_enabled: false # Activate kerberos authentication
 sshd_kerberos_enabled: false
 sshd_krb5_or_local_password: 'yes'
 sshd_krb5_ticket_cleanup: 'yes'
 sshd_krb5_get_afs_token: 'no'
+# @var sshd_gssapi_enabled: false # Activate gssapi authentication
 sshd_gssapi_enabled: false
 sshd_gssapi_cleanup: 'yes'
 sshd_gssapi_strict_acceptor_check: 'yes'
 sshd_gssapi_key_exchange: 'no'
+# @var sshd_use_pam: 'yes' # Define ssh daemon use pam process
 sshd_use_pam: 'yes'
+# @var sshd_allow_agent_forwarding: 'no' # Define ssh daemon allow agent forwarding
 sshd_allow_agent_forwarding: 'no'
+# @var sshd_allow_tcp_forwarding: 'no' # Define ssh daemon allow tcp forwarding
 sshd_allow_tcp_forwarding: 'no'
+# @var sshd_x11_forwarding: 'no' # Define ssh daemon allow X11 forwarding
 sshd_x11_forwarding: 'no'
+# @var sshd_x11_display_offset: '10' # Define ssh daemon x11 display offset
 sshd_x11_display_offset: '10'
 sshd_x11_use_localhost: 'yes'
+# @var sshd_permit_tty: 'yes' # Define ssh daemon allow TTY sessions
 sshd_permit_tty: 'yes'
 sshd_permit_motd: 'no'
+# @var sshd_print_lastlog: 'yes' # Define ssh daemon print last log at connection
 sshd_print_lastlog: 'yes'
+# @var sshd_tcp_keepalive: 'yes' # Define ssh daemon allow session keepalive
 sshd_tcp_keepalive: 'yes'
+# @var sshd_permit_user_environment: 'no' # Define ssh daemon allow user environment shipping
 sshd_permit_user_environment: 'no'
+# @var sshd_use_dns: 'no' # Define ssh daemon use DNS resolving for logs
 sshd_use_dns: 'no'
+# @var sshd_permit_tunnel: 'no' # Define ssh daemon allow tunnel connections
 sshd_permit_tunnel: 'no'
+# @var sshd_enable_sftp: true # Define ssh daemon allow sftp subsystem
 sshd_enable_sftp: true
+# @var sshd_banner_path: /etc/ssh/banner # Define ssh daemon banner to use
 # sshd_banner_path: /etc/ssh/banner
+# Add custom simple match rules unique User, Group, Host, LocalAddress, LocalPort, RDomain or Address
+# and associate specific ssh options for them.
+#matchs:
+#  host:
+#    catch: '127.0.0.1'
+#    options:
+#      - 'PermitRootLogin yes'
+
+#########################################
