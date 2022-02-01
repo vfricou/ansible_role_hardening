@@ -39,8 +39,8 @@ sshd_syslogfacility: 'AUTH'
 sshd_loglevel: 'INFO'
 # @var sshd_logingracetime: '120' # Define ssh daemon login grace time
 sshd_logingracetime: '120'
-# @var sshd_permitrootlogin: 'prohibit-password' # Define ssh daemon root password auth method
-sshd_permitrootlogin: 'prohibit-password'
+# @var sshd_permitrootlogin: 'no' # Define ssh daemon root password auth method
+sshd_permitrootlogin: 'no'
 # @var sshd_auth_maxtries: '3' # Define ssh daemon max auth tries
 sshd_auth_maxtries: '3'
 # @var sshd_sessions: '1' # Define ssh daemon max parallel sessions for one user
