@@ -1,0 +1,14 @@
+---
+- name: "test_files | retrieve log folders {{ file.path }} informations"
+  ansible.builtin.stat:
+    path: "{{ file.path }}"
+  register: checked_file
+
+- name: "test_files | check existances and permissions for {{ file.path }}"
+  ansible.builtin.assert:
+    that:
+      - checked_file.stat.exists
+      - checked_file.stat.isreg
+      - checked_file.stat.mode == "{{ file.mode }}"
+      - checked_file.stat.pw_name == "{{ file.owner }}"
+      - checked_file.stat.gr_name == "{{ file.group }}"

@@ -1,0 +1,81 @@
+---
+- name: "Gathering facts"
+  ansible.builtin.gather_facts:
+    parallel: yes
+
+- name: "Gathering packages facts"
+  ansible.builtin.package_facts:
+    manager: "auto"
+
+- name: "INCLUDE => PACKAGES"
+  ansible.builtin.include_tasks: "lib/packages.yml"
+  loop:
+    - "'nginx' in ansible_facts.packages"
+  loop_control:
+    loop_var: package_assertion
+
+- name: "INCLUDE => FILES | Test debian repository file"
+  ansible.builtin.include_tasks: "lib/files.yml"
+  loop:
+    - {path: '/etc/apt/sources.list.d/nginx.list', mode: '0644', owner: 'root', group: 'root'}
+  loop_control:
+    loop_var: file
+  when: ansible_distribution == 'Debian' or
+        ansible_distribution == 'Ubuntu'
+
+- name: "INCLUDE => FILES | Test rhel repository file"
+  ansible.builtin.include_tasks: "lib/files.yml"
+  loop:
+    - {path: '/etc/yum.repos.d/nginx.repo', mode: '0644', owner: 'root', group: 'root'}
+  loop_control:
+    loop_var: file
+  when: ansible_distribution == 'Rocky' or
+        ansible_distribution == 'RedHat'
+
+- name: "INCLUDE => FILES | Test nginx deployed configuration files"
+  ansible.builtin.include_tasks: "lib/files.yml"
+  loop:
+    - {path: '/etc/nginx/conf-availables/logging.conf', mode: '0644', owner: 'root', group: 'root'}
+    - {path: '/etc/nginx/conf-availables/security.conf', mode: '0644', owner: 'root', group: 'root'}
+    - {path: '/etc/nginx/conf.d/proxy/proxy_params.conf', mode: '0644', owner: 'root', group: 'root'}
+    - {path: '/etc/nginx/conf.d/ssl-template.conf', mode: '0644', owner: 'root', group: 'root'}
+    - {path: '/etc/nginx/conf.d/robots/configs/disallow_all.conf', mode: '0644', owner: 'root', group: 'root'}
+    - {path: '/etc/nginx/conf.d/robots/files/disallow_all.txt', mode: '0644', owner: 'root', group: 'root'}
+    - {path: '/etc/logrotate.d/nginx', mode: '0644', owner: 'root', group: 'root'}
+    - {path: '/etc/logrotate.d/nginx-vhost', mode: '0644', owner: 'root', group: 'root'}
+    - {path: '/etc/nginx/nginx.conf', mode: '0644', owner: 'root', group: 'root'}
+    - {path: '/etc/nginx/conf.d/ssl/configs/ssl-hardening.conf', mode: '0644', owner: 'root', group: 'root'}
+    - {path: '/etc/nginx/conf.d/ssl/configs/ssl-ciphers.conf', mode: '0644', owner: 'root', group: 'root'}
+    - {path: '/etc/nginx/conf.d/stub_status.conf', mode: '0644', owner: 'root', group: 'root'}
+    - {path: '/etc/nginx/sites-availables/templates/http-rp-template.vhost', mode: '0644', owner: 'root', group: 'root'}
+    - {path: '/etc/nginx/sites-availables/templates/https-rp-template.vhost', mode: '0644', owner: 'root', group: 'root'}  # yamllint disable-line rule:line-length
+  loop_control:
+    loop_var: file
+
+- name: "INCLUDE => FOLDERS | Test folders"
+  ansible.builtin.include_tasks: "lib/folders.yml"
+  loop:
+    - {path: "/etc/nginx/conf-availables", mode: '0755', owner: 'root', group: 'root'}
+    - {path: "/etc/nginx/conf-enabled", mode: '0755', owner: 'root', group: 'root'}
+    - {path: "/etc/nginx/sites-availables", mode: '0755', owner: 'root', group: 'root'}
+    - {path: "/etc/nginx/sites-availables/templates", mode: '0755', owner: 'root', group: 'root'}
+    - {path: "/etc/nginx/sites-enabled", mode: '0755', owner: 'root', group: 'root'}
+    - {path: "/etc/nginx/conf.d/ssl", mode: '0755', owner: 'root', group: 'root'}
+    - {path: "/etc/nginx/conf.d/ssl/configs", mode: '0755', owner: 'root', group: 'root'}
+    - {path: "/etc/nginx/conf.d/ssl/files", mode: '0755', owner: 'root', group: 'root'}
+    - {path: "/etc/nginx/conf.d/proxy", mode: '0755', owner: 'root', group: 'root'}
+    - {path: "/etc/nginx/conf.d/robots/configs", mode: '0755', owner: 'root', group: 'root'}
+    - {path: "/etc/nginx/conf.d/robots/files", mode: '0755', owner: 'root', group: 'root'}
+    - {path: "/var/log/nginx/vhost", mode: '0755', owner: 'root', group: 'root'}
+    - {path: "/var/log/nginx/archives", mode: '0755', owner: 'root', group: 'root'}
+    - {path: "/var/log/nginx/archives/vhost", mode: '0755', owner: 'root', group: 'root'}
+  loop_control:
+    loop_var: folder
+
+- name: "INCLUDE => LINKS | Test links"
+  ansible.builtin.include_tasks: "lib/links.yml"
+  loop:
+    - {path: "/etc/nginx/conf-enabled/logging.conf", owner: 'root', group: 'root'}
+    - {path: "/etc/nginx/conf-enabled/security.conf", owner: 'root', group: 'root'}
+  loop_control:
+    loop_var: link

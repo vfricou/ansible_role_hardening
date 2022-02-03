@@ -1,0 +1,20 @@
+---
+- name: 'openssh | configure | deploy sshd configuration'
+  ansible.builtin.template:
+    dest: '{{ sshd_config_path }}'
+    src: 'openssh/sshd_config.j2'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+    backup: yes
+  notify: 'restart ssh daemon'
+
+- name: 'openssh | configure | deploy banner'
+  ansible.builtin.template:
+    dest: '{{ sshd_banner_path }}'
+    src: 'banner.j2'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+    backup: yes
+  when: sshd_banner_path is defined

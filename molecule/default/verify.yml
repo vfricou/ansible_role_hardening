@@ -1,0 +1,10 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+  - name: Include test_nginx
+    include_role:
+      name: 'test_nginx'
+    vars:
+      ansible_python_interpreter: /usr/bin/python3

@@ -1,0 +1,11 @@
+---
+- name: 'import preconfigure tasks'
+  ansible.builtin.import_tasks: 'preconfigure.yml'
+  tags:
+    - install
+
+- name: 'import configure tasks'
+  ansible.builtin.import_tasks: 'configure.yml'
+  tags:
+    - install
+    - configure

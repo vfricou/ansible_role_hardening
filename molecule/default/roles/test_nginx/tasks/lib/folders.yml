@@ -1,0 +1,14 @@
+---
+- name: "test_logfolders | retrieve log folders {{ folder.path }} informations"
+  ansible.builtin.stat:
+    path: "{{ folder.path }}"
+  register: checked_folder
+
+- name: "test_logfolders | check existances and permissions for {{ folder.path }}"
+  ansible.builtin.assert:
+    that:
+      - checked_folder.stat.exists
+      - checked_folder.stat.isdir
+      - checked_folder.stat.mode == "{{ folder.mode }}"
+      - checked_folder.stat.pw_name == "{{ folder.owner }}"
+      - checked_folder.stat.gr_name == "{{ folder.group }}"
