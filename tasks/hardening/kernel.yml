@@ -1,0 +1,78 @@
+---
+- name: "kernel | tune kernel self protection"
+  ansible.posix.sysctl:
+    name: 'kernel.kptr_restrict'
+    value: "{{hard_kernel_self_protection}}"
+    sysctl_set: yes
+    sysctl_file: "{{hardening_kernel_sysctl_file}}"
+    state: present
+    reload: yes
+
+- name: "kernel | tune dmesg restriction"
+  ansible.posix.sysctl:
+    name: 'kernel.dmesg_restrict'
+    value: "{{hard_kernel_dmesg_restrict}}"
+    sysctl_set: yes
+    sysctl_file: "{{hardening_kernel_sysctl_file}}"
+    state: present
+    reload: yes
+
+- name: "kernel | tune eBPF calls"
+  ansible.posix.sysctl:
+    name: "{{item.pointer}}"
+    value: "{{item.data}}"
+    sysctl_set: yes
+    sysctl_file: "{{hardening_kernel_sysctl_file}}"
+    state: present
+    reload: yes
+  with_items:
+    - { pointer: 'kernel.unprivileged_bpf_disabled', data: "{{hard_kernel_disable_unpriv_bpf}}" }
+    - { pointer: 'net.core.bpf_jit_harden', data: "{{hard_net_disable_unpriv_bpf}}" }
+
+- name: "kernel | stat if line discipline endpoint exist"
+  ansible.builtin.stat:
+    path: '/proc/sys/dev/tty/ldisc_autoload'
+  register: dev_tty_ldisc_autoload_endpoint
+
+- name: "kernel | tune line discipline autoload"
+  ansible.posix.sysctl:
+    name: 'dev.tty.ldisc_autoload'
+    value: "{{hard_dev_enable_ldisc_autoload}}"
+    sysctl_set: yes
+    sysctl_file: "{{hardening_kernel_sysctl_file}}"
+    state: present
+    reload: yes
+  when: dev_tty_ldisc_autoload_endpoint.stat.exists
+
+- name: "kernel | stat if unprivileged syscall endpoint exist"
+  ansible.builtin.stat:
+    path: '/proc/sys/vm/unprivileged_userfaultfd'
+  register: vm_unprivileged_userfaultfd_endpoint
+
+- name: "kernel | tune unprivileged syscall userfaultfd"
+  ansible.posix.sysctl:
+    name: 'vm.unprivileged_userfaultfd'
+    value: "{{hard_vm_enable_unpriv_userfaultfd}}"
+    sysctl_set: yes
+    sysctl_file: "{{hardening_kernel_sysctl_file}}"
+    state: present
+    reload: yes
+  when: vm_unprivileged_userfaultfd_endpoint.stat.exists
+
+- name: "kernel | tune kexec hability"
+  ansible.posix.sysctl:
+    name: 'kernel.kexec_load_disabled'
+    value: "{{hard_kernel_disable_kexec}}"
+    sysctl_set: yes
+    sysctl_file: "{{hardening_kernel_sysctl_file}}"
+    state: present
+    reload: yes
+
+- name: "kernel | tune sysrq"
+  ansible.posix.sysctl:
+    name: 'kernel.sysrq'
+    value: "{{hard_kernel_sysrq}}"
+    sysctl_set: yes
+    sysctl_file: "{{hardening_kernel_sysctl_file}}"
+    state: present
+    reload: yes
