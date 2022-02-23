@@ -12,7 +12,11 @@
 - name: 'import kernel hardening'
   ansible.builtin.import_tasks: 'hardening/kernel.yml'
   when: kernel_hardening
+  tags:
+    - configure
 
 - name: 'import network hardening'
   ansible.builtin.import_tasks: 'hardening/network.yml'
   when: network_hardening
+  tags:
+    - configure
