@@ -11,6 +11,7 @@ Protocol 2
 
 HostKey /etc/ssh/ssh_host_rsa_key
 HostKey /etc/ssh/ssh_host_ed25519_key
+HostKeyAlgorithms={{ sshd_host_keyalgorithms|join(',') }}
 RekeyLimit 512M 6h
 
 Ciphers {{ sshd_ciphers|join(',') }}
