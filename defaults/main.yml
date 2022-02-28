@@ -2,6 +2,8 @@
 #########################################
 # Global role parts activation variables
 openssh_config: true
+kernel_hardening: true
+network_hardening: true
 
 #########################################
 # OpenSSH tuning variables
@@ -104,3 +106,56 @@ sshd_enable_sftp: true
 #      - 'PermitRootLogin yes'
 
 #########################################
+# Kernel hardening variables
+# @var hard_kernel_self_protection: 1 # Define kernel protection kernel.kptr_restrict value
+hard_kernel_self_protection: 1
+# @var hard_kernel_dmesg_restrict: 1 # Restrict dmesg view to CAP_SYSLOG capability
+hard_kernel_dmesg_restrict: 1
+# @var hard_kernel_disable_unpriv_bpf: 1 # Restrict BPF calls to CAP_BPF/CAP_SYS_ADMIN capability
+hard_kernel_disable_unpriv_bpf: 1
+# @var hard_net_disable_unpriv_bpf: 2 # Restrict network BPF to CAP_BPF/CAP_SYS_ADMIN capability
+hard_net_disable_unpriv_bpf: 2
+# @var hard_dev_enable_ldisc_autoload: 0 # Restrict line discipline to CAP_SYS_MODULE capability
+hard_dev_enable_ldisc_autoload: 0
+# @var hard_vm_disable_unpriv_userfaultfd: 0 # Restrict userfaultfd syscall to CAP_SYS_PTRACES
+hard_vm_enable_unpriv_userfaultfd: 0
+# @var hard_kernel_disable_kexec: 1 # Disable kexec possibility
+hard_kernel_disable_kexec: 1
+# @var hard_kernel_sysrq: 4 # Setup sysrq to give keyboard control only
+hard_kernel_sysrq: 4
+# @var hard_net_tcp_syncookies: 1 # Setup TCP cookies to prevent SYN flood attack
+hard_net_tcp_syncookies: 1
+# @var hard_net_tcp_rfc1337: 1 # Force drop connections in TIME-WAIT status
+hard_net_tcp_rfc1337: 1
+# @var hard_net_pkt_validation: 1 # Force packet source validation to protect of IP spoofing
+hard_net_pkt_validation: 1
+# @var hard_net_accept_icmp_redirect: 0 # Allow ICMP redirect acceptance and sending
+hard_net_accept_icmp_redirect: 0
+# @var hard_net_ignore_icmp_echo: 0 # Disallow ICMP echo request from all sources
+hard_net_ignore_icmp_echo: 0
+# @var hard_net_allow_source_routing: 0 # Allow source routing
+hard_net_allow_source_routing: 0
+# @var hard_net_allow_ra: 0 # Allow IPv6 router advertisement
+hard_net_allow_ra: 0
+# @var hard_net_allow_extended_ack: 0 # Allow extended ACK states (FACK, SACK, DSACK)
+hard_net_allow_extended_ack: 0
+# @var hard_net_allow_ip_forward: 0 # Allow IP forwarding (routing)
+hard_net_allow_ip_forward: 0
+# @var hard_net_allow_reverse_path: 1 # Disallow reverse path
+hard_net_allow_reverse_path: 1
+# @var hard_net_log_martians: 1 # Enable martians packets logging
+hard_net_log_martians: 1
+# @var hard_net_ignore_icmp_not_rfc1122: 1 # Ignore non RFC1122 ICMP packets
+hard_net_ignore_icmp_not_rfc1122: 1
+# @var hard_net_ephemeral_port_range: '32768 65535' # Specify ephemeral port range
+hard_net_ephemeral_port_range: '32768 65535'
+# @var hard_net_enable_rs: 0 # Allow router solicitation support
+hard_net_allow_rs: 0
+# @var hard_net_allow_ra_rtr_pref: 0 # Allow "router preferences" by "router advertisements "
+hard_net_allow_ra_rtr_pref: 0
+# @var hard_net_allow_ra_prefix_autoconf: 0 # Allow prefix autoconfiguration from RA
+hard_net_allow_ra_prefix_autoconf: 0
+# @var hard_net_allow_ra_defroute: 0 # Allow router advertisement default route
+hard_net_allow_ra_defroute: 0
+# @var hard_net_allow_ra_autoconf: 0 # Allow RA autoconfiguration
+hard_net_allow_ra_autoconf: 0

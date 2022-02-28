@@ -1,0 +1,133 @@
+---
+- name: "hardening | network | tune TCP SYN cookies"
+  ansible.posix.sysctl:
+    name: 'net.ipv4.tcp_syncookies'
+    value: "{{hard_net_tcp_syncookies}}"
+    sysctl_set: yes
+    sysctl_file: "{{hardening_network_sysctl_file}}"
+    state: present
+    reload: yes
+
+- name: "hardening | network | tune TCP RFC1337"
+  ansible.posix.sysctl:
+    name: 'net.ipv4.tcp_rfc1337'
+    value: "{{hard_net_tcp_rfc1337}}"
+    sysctl_set: yes
+    sysctl_file: "{{hardening_network_sysctl_file}}"
+    state: present
+    reload: yes
+
+- name: "hardening | network | tune source packet validation"
+  ansible.posix.sysctl:
+    name: "{{item.pointer}}"
+    value: "{{item.data}}"
+    sysctl_set: yes
+    sysctl_file: "{{hardening_network_sysctl_file}}"
+    state: present
+    reload: yes
+  with_items:
+    - { pointer: 'net.ipv4.conf.all.rp_filter', data: "{{hard_net_pkt_validation}}" }
+    - { pointer: 'net.ipv4.conf.default.rp_filter', data: "{{hard_net_pkt_validation}}" }
+
+- name: "hardening | network | tune ICMP redirect acceptance and sending"
+  ansible.posix.sysctl:
+    name: "{{item.pointer}}"
+    value: "{{item.data}}"
+    sysctl_set: yes
+    sysctl_file: "{{hardening_network_sysctl_file}}"
+    state: present
+    reload: yes
+  with_items:
+    - { pointer: 'net.ipv4.conf.all.accept_redirects', data: "{{hard_net_accept_icmp_redirect}}" }
+    - { pointer: 'net.ipv4.conf.default.accept_redirects', data: "{{hard_net_accept_icmp_redirect}}" }
+    - { pointer: 'net.ipv4.conf.all.secure_redirects', data: "{{hard_net_accept_icmp_redirect}}" }
+    - { pointer: 'net.ipv4.conf.default.secure_redirects', data: "{{hard_net_accept_icmp_redirect}}" }
+    - { pointer: 'net.ipv4.conf.all.send_redirects', data: "{{hard_net_accept_icmp_redirect}}" }
+    - { pointer: 'net.ipv4.conf.default.send_redirects', data: "{{hard_net_accept_icmp_redirect}}" }
+    - { pointer: 'net.ipv6.conf.all.accept_redirects', data: "{{hard_net_accept_icmp_redirect}}" }
+    - { pointer: 'net.ipv6.conf.default.accept_redirects', data: "{{hard_net_accept_icmp_redirect}}" }
+
+- name: "hardening | network | tune ICMP echo request acceptation"
+  ansible.posix.sysctl:
+    name: 'net.ipv4.icmp_echo_ignore_all'
+    value: "{{hard_net_ignore_icmp_echo}}"
+    sysctl_set: yes
+    sysctl_file: "{{hardening_network_sysctl_file}}"
+    state: present
+    reload: yes
+
+- name: "hardening | network | tune source routing acceptation"
+  ansible.posix.sysctl:
+    name: "{{item.pointer}}"
+    value: "{{item.data}}"
+    sysctl_set: yes
+    sysctl_file: "{{hardening_network_sysctl_file}}"
+    state: present
+    reload: yes
+  with_items:
+    - { pointer: 'net.ipv4.conf.all.accept_source_route', data: "{{hard_net_allow_source_routing}}" }
+    - { pointer: 'net.ipv4.conf.default.accept_source_route', data: "{{hard_net_allow_source_routing}}" }
+    - { pointer: 'net.ipv6.conf.all.accept_source_route', data: "{{hard_net_allow_source_routing}}" }
+    - { pointer: 'net.ipv6.conf.default.accept_source_route', data: "{{hard_net_allow_source_routing}}" }
+
+- name: "hardening | network | tune extended ACK states acceptance"
+  ansible.posix.sysctl:
+    name: "{{item.pointer}}"
+    value: "{{item.data}}"
+    sysctl_set: yes
+    sysctl_file: "{{hardening_network_sysctl_file}}"
+    state: present
+    reload: yes
+  with_items:
+    - { pointer: 'net.ipv4.tcp_sack', data: "{{hard_net_allow_extended_ack}}" }
+    - { pointer: 'net.ipv4.tcp_dsack', data: "{{hard_net_allow_extended_ack}}" }
+    - { pointer: 'net.ipv4.tcp_fack', data: "{{hard_net_allow_extended_ack}}" }
+
+- name: "hardening | network | tune martians packets logging"
+  ansible.posix.sysctl:
+    name: 'net.ipv4.conf.all.log_martians'
+    value: "{{hard_net_log_martians}}"
+    sysctl_set: yes
+    sysctl_file: "{{hardening_network_sysctl_file}}"
+    state: present
+    reload: yes
+
+- name: "hardening | network | tune icmp not rfc1122 ignore"
+  ansible.posix.sysctl:
+    name: 'net.ipv4.icmp_ignore_bogus_error_responses'
+    value: "{{hard_net_ignore_icmp_not_rfc1122}}"
+    sysctl_set: yes
+    sysctl_file: "{{hardening_network_sysctl_file}}"
+    state: present
+    reload: yes
+
+- name: "hardening | network | tune ephemeral port range"
+  ansible.posix.sysctl:
+    name: 'net.ipv4.ip_local_port_range'
+    value: "{{hard_net_ephemeral_port_range}}"
+    sysctl_set: yes
+    sysctl_file: "{{hardening_network_sysctl_file}}"
+    state: present
+    reload: yes
+
+- name: "hardening | network | tune router advertisement acceptation"
+  ansible.posix.sysctl:
+    name: "{{item.pointer}}"
+    value: "{{item.data}}"
+    sysctl_set: yes
+    sysctl_file: "{{hardening_network_sysctl_file}}"
+    state: present
+    reload: yes
+  with_items:
+    - { pointer: 'net.ipv6.conf.all.accept_ra', data: "{{hard_net_allow_ra}}" }
+    - { pointer: 'net.ipv6.conf.default.accept_ra', data: "{{hard_net_allow_ra}}" }
+    - { pointer: 'net.ipv6.conf.all.router_solicitations', data: "{{hard_net_allow_rs}}" }
+    - { pointer: 'net.ipv6.conf.default.router_solicitations', data: "{{hard_net_allow_rs}}" }
+    - { pointer: 'net.ipv6.conf.all.accept_ra_rtr_pref', data: "{{hard_net_allow_ra_rtr_pref}}" }
+    - { pointer: 'net.ipv6.conf.default.accept_ra_rtr_pref', data: "{{hard_net_allow_ra_rtr_pref}}" }
+    - { pointer: 'net.ipv6.conf.all.accept_ra_pinfo', data: "{{hard_net_allow_ra_prefix_autoconf}}" }
+    - { pointer: 'net.ipv6.conf.default.accept_ra_pinfo', data: "{{hard_net_allow_ra_prefix_autoconf}}" }
+    - { pointer: 'net.ipv6.conf.all.accept_ra_defrtr', data: "{{hard_net_allow_ra_defroute}}" }
+    - { pointer: 'net.ipv6.conf.default.accept_ra_defrtr', data: "{{hard_net_allow_ra_defroute}}" }
+    - { pointer: 'net.ipv6.conf.all.autoconf', data: "{{hard_net_allow_ra_autoconf}}" }
+    - { pointer: 'net.ipv6.conf.default.autoconf', data: "{{hard_net_allow_ra_autoconf}}" }

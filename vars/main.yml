@@ -1,3 +1,6 @@
 ---
 sshd_config_path: '/etc/ssh/sshd_config'
 ssh_config_path: '/etc/ssh/ssh_config'
+
+hardening_kernel_sysctl_file: '/etc/sysctl.d/00-ansible_kernel_hardening.conf'
+hardening_network_sysctl_file: '/etc/sysctl.d/00-ansible_network_hardening.conf'
