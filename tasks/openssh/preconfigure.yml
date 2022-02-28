@@ -6,32 +6,53 @@
   with_items:
     - '/etc/ssh/ssh_host_ecdsa_key'
     - '/etc/ssh/ssh_host_ecdsa_key.pub'
-    - '/etc/ssh/ssh_host_ed25519_key'
-    - '/etc/ssh/ssh_host_ed25519_key.pub'
-    - '/etc/ssh/ssh_host_rsa_key'
-    - '/etc/ssh/ssh_host_rsa_key.pub'
 
-- name: 'openssh | preconfigure | generate new host keys'
+- name: 'openssh | preconfigure | generate new ed25519 host keys'
   community.crypto.openssh_keypair:
-    path: '{{ item.path }}'
-    type: '{{ item.type }}'
-    size: '{{ item.size }}'
-    comment: "SSH {{ item.type }} key for {{ ansible_hostname }}"
+    path: '/etc/ssh/ssh_host_ed25519_key'
+    backend: 'opensshbin'
+    type: 'ed25519'
     owner: 'root'
     group: 'root'
     mode: '0600'
-  loop:
-    - { path: '/etc/ssh/ssh_host_rsa_key', type: 'rsa', size: 4096 }
-    - { path: '/etc/ssh/ssh_host_ed25519_key', type: 'ed25519', size: 256 }
-  when: (ansible_distribution == 'Debian' and ansible_distribution_major_version|int >= 10) or
-        (ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 17)
+    regenerate: full_idempotence
 
-- name: 'openssh | preconfigure | enable systemd targets on RHEL based system'
-  ansible.builtin.systemd:
-    name: '{{ item }}'
-    enabled: yes
-  with_items:
-    - 'sshd-keygen@rsa.service'
-    - 'sshd-keygen@ed25519.service'
-  when: (ansible_distribution == 'Rocky' and ansible_distribution_major_version|int >= 8) or
-        (ansible_distribution == 'RedHat' and ansible_distribution_major_version|int >= 8)
+- name: 'openssh | preconfigure | generate new rsa host keys'
+  community.crypto.openssh_keypair:
+    path: '/etc/ssh/ssh_host_rsa_key'
+    type: 'rsa'
+    size: 4096
+    owner: 'root'
+    group: 'root'
+    mode: '0600'
+    regenerate: full_idempotence
+
+- name: 'openssh | preconfigure | rocky linux tasks'
+  block:
+    - name: 'openssh | preconfigure | stat if crypto policy configuration exist'
+      ansible.builtin.stat:
+        path: '/etc/crypto-policies/back-ends/opensshserver.config'
+      register: crypto_policy_state
+
+    - name: 'openssh | preconfigure | disable rocky linux openssh crypto policy'
+      ansible.builtin.lineinfile:
+        path: '/etc/crypto-policies/back-ends/opensshserver.config'
+        regexp: "^CRYPTO_POLICY='.*"
+        line: "CRYPTO_POLICY=''"
+      when: crypto_policy_state.stat.exists
+
+    - name: 'openssh | preconfigure | disable ssh host key generation services'
+      ansible.builtin.systemd:
+        name: '{{ item }}'
+        state: stopped
+        masked: yes
+        enabled: no
+      with_items:
+        - 'sshd-keygen@rsa.service'
+        - 'sshd-keygen@ed25519.service'
+        - 'sshd-keygen@ecdsa.service'
+
+    - name: 'openssh | preconfigure | revalidate selinux files fingerprint'
+      ansible.builtin.command: restorecon -irv /etc/ssh/
+
+  when: ansible_distribution == 'Rocky' and ansible_distribution_major_version|int >= 8
