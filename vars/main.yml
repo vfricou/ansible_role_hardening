@@ -1,4 +1,23 @@
 ---
+# Supported OS definition
+supported_platforms:
+  - name: Debian
+    versions:
+      - 10
+      - 11
+  - name: Rocky
+    versions:
+      - 8
+  - name: Ubuntu
+    versions:
+      - 18.04
+      - 20.04
+      - 21.04
+  - name: RedHat
+    versions:
+      - 8
+
+# Role variables
 sshd_config_path: '/etc/ssh/sshd_config'
 ssh_config_path: '/etc/ssh/ssh_config'
 
