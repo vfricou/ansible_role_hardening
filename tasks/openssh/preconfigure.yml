@@ -1,5 +1,5 @@
 ---
-- name: 'openssh | preconfigure | remove existing host keys'
+- name: 'OpenSSH | Preconfigure | remove existing host keys'
   ansible.builtin.file:
     path: '{{ item }}'
     state: absent
@@ -7,7 +7,7 @@
     - '/etc/ssh/ssh_host_ecdsa_key'
     - '/etc/ssh/ssh_host_ecdsa_key.pub'
 
-- name: 'openssh | preconfigure | generate new ed25519 host keys'
+- name: 'OpenSSH | Preconfigure | generate new ed25519 host keys'
   community.crypto.openssh_keypair:
     path: '/etc/ssh/ssh_host_ed25519_key'
     backend: 'opensshbin'
@@ -17,7 +17,7 @@
     mode: '0600'
     regenerate: full_idempotence
 
-- name: 'openssh | preconfigure | generate new rsa host keys'
+- name: 'OpenSSH | Preconfigure | generate new rsa host keys'
   community.crypto.openssh_keypair:
     path: '/etc/ssh/ssh_host_rsa_key'
     type: 'rsa'
@@ -27,21 +27,21 @@
     mode: '0600'
     regenerate: full_idempotence
 
-- name: 'openssh | preconfigure | rocky linux tasks'
+- name: 'OpenSSH | Preconfigure | rocky linux tasks'
   block:
-    - name: 'openssh | preconfigure | stat if crypto policy configuration exist'
+    - name: 'OpenSSH | Preconfigure | stat if crypto policy configuration exist'
       ansible.builtin.stat:
         path: '/etc/crypto-policies/back-ends/opensshserver.config'
       register: crypto_policy_state
 
-    - name: 'openssh | preconfigure | disable rocky linux openssh crypto policy'
+    - name: 'OpenSSH | Preconfigure | disable rocky linux openssh crypto policy'
       ansible.builtin.lineinfile:
         path: '/etc/crypto-policies/back-ends/opensshserver.config'
         regexp: "^CRYPTO_POLICY='.*"
         line: "CRYPTO_POLICY=''"
       when: crypto_policy_state.stat.exists
 
-    - name: 'openssh | preconfigure | disable ssh host key generation services'
+    - name: 'OpenSSH | Preconfigure | disable ssh host key generation services'
       ansible.builtin.systemd:
         name: '{{ item }}'
         state: stopped
@@ -52,7 +52,7 @@
         - 'sshd-keygen@ed25519.service'
         - 'sshd-keygen@ecdsa.service'
 
-    - name: 'openssh | preconfigure | revalidate selinux files fingerprint'
+    - name: 'OpenSSH | Preconfigure | revalidate selinux files fingerprint'
       ansible.builtin.command: restorecon -irv /etc/ssh/
 
   when: ansible_distribution == 'Rocky' and ansible_distribution_major_version|int >= 8

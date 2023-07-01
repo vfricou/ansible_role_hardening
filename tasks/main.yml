@@ -1,22 +1,25 @@
 ---
-
-- name: "import validator"
+- name: "Import validator"
   ansible.builtin.import_tasks: 'validator/main.yml'
   tags:
     - always
 
-- name: 'import openssh'
+- name: 'Import openssh'
   ansible.builtin.import_tasks: 'openssh/main.yml'
+  tags:
+    - openssh
   when: openssh_config
 
-- name: 'import kernel hardening'
+- name: 'Import kernel hardening'
   ansible.builtin.import_tasks: 'hardening/kernel.yml'
   when: kernel_hardening
   tags:
-    - configure
+    - hardening
+    - kernel_hardening
 
-- name: 'import network hardening'
+- name: 'Import network hardening'
   ansible.builtin.import_tasks: 'hardening/network.yml'
   when: network_hardening
   tags:
-    - configure
+    - hardening
+    - network_hardening

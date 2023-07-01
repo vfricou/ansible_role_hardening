@@ -1,11 +1,14 @@
 ---
-- name: 'import preconfigure tasks'
-  ansible.builtin.import_tasks: 'preconfigure.yml'
+- name: 'Import preconfigure tasks'
+  ansible.builtin.import_tasks: openssh/preconfigure.yml
   tags:
     - install
+    - openssh_install
 
-- name: 'import configure tasks'
-  ansible.builtin.import_tasks: 'configure.yml'
+- name: 'Import configure tasks'
+  ansible.builtin.import_tasks: openssh/configure.yml
   tags:
     - install
     - configure
+    - openssh_install
+    - openssh_configure

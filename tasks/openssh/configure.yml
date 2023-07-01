@@ -1,5 +1,5 @@
 ---
-- name: 'openssh | configure | deploy sshd configuration'
+- name: 'OpenSSH | Configure | deploy sshd configuration'
   ansible.builtin.template:
     dest: '{{ sshd_config_path }}'
     src: 'openssh/sshd_config.j2'
@@ -9,7 +9,7 @@
     backup: yes
   notify: 'restart ssh daemon'
 
-- name: 'openssh | configure | deploy banner'
+- name: 'OpenSSH | Configure | deploy banner'
   ansible.builtin.template:
     dest: '{{ sshd_banner_path }}'
     src: 'banner.j2'
